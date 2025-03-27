@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("Home");
 
   const renderSection = () => {
+    console.log("Active Section:", activeSection); // Debugging
     switch (activeSection) {
       case "Search":
         return <DashboardSearch />;
@@ -38,7 +39,10 @@ const Dashboard = () => {
             <div
               key={item.name}
               className="flex flex-col items-center space-x-2 cursor-pointer"
-              onClick={() => setActiveSection(item.name)}
+              onClick={() => {
+                console.log("Setting active section to:", item.name); // Debugging
+                setActiveSection(item.name);
+              }}
             >
               <img src={item.icon} alt={item.name} className="w-6 h-6" />
               <p
