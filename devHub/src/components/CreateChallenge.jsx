@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import search from "../assets/search.png";
-import searchLogo from "../assets/searchLogo.svg";
 
 const CreateChallenge = () => {
   const navigate = useNavigate();
+  const [challenges, setChallenges] = useState([]);
+
+  useEffect(() => {
+    const fetchChallenges = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/challenges/get", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const result = await response.json();
+        if (response.ok) {
+          setChallenges(result);
+        } else {
+          console.error("Failed to fetch challenges:", result.message);
+        }
+      } catch (error) {
+        console.error("Error fetching challenges:", error);
+      }
+    };
+
+    fetchChallenges();
+  }, []);
 
   return (
     <div className="p-8 min-h-screen bg-gray-50">
@@ -16,7 +39,7 @@ const CreateChallenge = () => {
             className="flex-1 outline-none rounded-xl"
           />
           <button className="text-blue-600 text-xl ml-2">
-            <img src={searchLogo} alt="search" className="w-8 h-8" />
+            <img src={search} alt="search" className="w-8 h-8" />
           </button>
         </div>
         <button
@@ -30,20 +53,22 @@ const CreateChallenge = () => {
       {/* Created Challenges Section */}
       <h2 className="text-xl font-bold mb-4">Your Created Challenges</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {["Challenge 1", "Challenge 2", "Challenge 3"].map((challenge, index) => (
-          <div key={index} className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-lg font-bold">
-              Transforming Cancer Navigation with Open Data & APIs
-            </h3>
-            <p className="text-sm text-gray-600 mt-2">
-              Support care Navigators with digital tools that integrate openly available datasets
-              and APIs. Enhance patient care and support systems.
-            </p>
-            <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-              View
-            </button>
-          </div>
-        ))}
+        {challenges.length > 0 ? (
+          challenges.map((challenge) => (
+            <div key={challenge._id} className="bg-white shadow-md rounded-lg p-6">
+              <h3 className="text-lg font-bold">{challenge.title}</h3>
+              <p className="text-sm text-gray-600 mt-2">{challenge.description}</p>
+              <button
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => navigate(`/kanban/${challenge._id}`)}
+              >
+                View
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>No challenges found.</p>
+        )}
       </div>
     </div>
   );
