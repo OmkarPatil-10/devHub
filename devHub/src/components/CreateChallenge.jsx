@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import search from "../assets/search.png";
+import searchLogo from "../assets/searchLogo.svg";
 
 const CreateChallenge = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const CreateChallenge = () => {
             className="flex-1 outline-none rounded-xl"
           />
           <button className="text-blue-600 text-xl ml-2">
-            <img src={search} alt="search" className="w-8 h-8" />
+            <img src={searchLogo} alt="search" className="w-8 h-8" />
           </button>
         </div>
         <button
